@@ -68,7 +68,8 @@ SINGLE_FIELDS = (
   "hidden-service-dir",
   "protocols",
   "allow-single-hop-exits",
-)
+  "ntor-onion-key",
+  )
 
 def parse_file(descriptor_file, validate = True):
   """
@@ -239,6 +240,8 @@ class ServerDescriptor(stem.descriptor.Descriptor):
     self.write_history_values = None
     
     self._unrecognized_lines = []
+    
+    self.ntor_onion_key = None
     
     self._annotation_lines = annotations if annotations else []
     self._annotation_dict = None # cached breakdown of key/value mappings
@@ -442,6 +445,9 @@ class ServerDescriptor(stem.descriptor.Descriptor):
           self.hidden_service_dir = value.split(" ")
         else:
           self.hidden_service_dir = ["2"]
+      elif keyword == "ntor-onion-key":
+        self.ntor_onion_key=value
+        
       elif keyword == "uptime":
         # We need to be tolerant of negative uptimes to accommodate a past tor
         # bug...
